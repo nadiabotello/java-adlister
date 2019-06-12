@@ -9,8 +9,12 @@
 <html>
 <head>
     <title>Profile</title>
+    <%@ include file="partials/header.jsp" %>
 </head>
 <body>
+<%@ include file="partials/navbar.jsp" %>
+<main>
 <h1>This is the profile page</h1>
+</main>
 </body>
 </html>
