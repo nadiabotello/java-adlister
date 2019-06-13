@@ -11,11 +11,8 @@ import java.io.PrintWriter;
 public class ViewProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Boolean user = (boolean) request.getSession().getAttribute("user");
-
-        if (!user) {
+        if (request.getSession().getAttribute("user") == null) {
             response.sendRedirect("/login");
-            return;
         } else {
             request.getRequestDispatcher("/WEB-INF/profile.jsp").forward(request, response);
         }
