@@ -26,6 +26,7 @@ public class MySQLAdsDao implements Ads {
 
     private Ad getAdsResults(ResultSet rs) throws SQLException {
         return new Ad(
+                rs.getLong("id"),
                 rs.getLong("user_id"),
                 rs.getString("title"),
                 rs.getString("description")
@@ -65,13 +66,13 @@ public class MySQLAdsDao implements Ads {
             stmt.executeUpdate(insertNew, Statement.RETURN_GENERATED_KEYS);
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                System.out.println("New Ad ID: " + rs.getLong(1));
+                return rs.getLong(1);
             }
         } catch (SQLException e) {
             throw new RuntimeException("error insert", e);
         }
 
-        return null;
+        return 0L;
     }
 }
 

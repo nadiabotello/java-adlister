@@ -9,4 +9,13 @@ public class DaoFactory {
         }
         return adsDao;
     }
+
+    private static Employees employeesDao;
+
+    public static Employees getEmployeesDao() {
+        if (employeesDao == null) {
+            employeesDao = new MySQLEmployeeDao();
+        }
+        return employeesDao;
+    }
 }
