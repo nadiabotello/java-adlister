@@ -18,7 +18,7 @@ public class MySQLAdsDao implements Ads {
             DriverManager.registerDriver(new Driver());
             connection = DriverManager.getConnection(
                 config.getUrl(),
-                config.getUser(),
+                config.getUsername(),
                 config.getPassword()
             );
         } catch (SQLException e) {
@@ -41,11 +41,13 @@ public class MySQLAdsDao implements Ads {
     @Override
     public Long insert(Ad ad) {
         try {
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate(createInsertQuery(ad), Statement.RETURN_GENERATED_KEYS);
-            ResultSet rs = stmt.getGeneratedKeys();
+            PreparedStatement preparedStatement = connection.prepareStatement(createInsertQuery(ad), Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setLong(1, 1);
+            ResultSet rs = preparedStatement.getGeneratedKeys();
             rs.next();
-            return rs.getLong(1);
+            return rs.getLong(rs);
+
+
         } catch (SQLException e) {
             throw new RuntimeException("Error creating a new ad.", e);
         }
