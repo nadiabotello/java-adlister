@@ -3,13 +3,7 @@ package com.codeup.adlister.dao;
 import com.codeup.adlister.models.Ad;
 import com.codeup.adlister.models.User;
 import com.mysql.cj.jdbc.Driver;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MySQLUsersDao implements Users{
     private Connection connection = null;
@@ -30,21 +24,48 @@ public class MySQLUsersDao implements Users{
     @Override
     public User findByUsername(String username) {
         try{
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from ads where username = ?");
-            preparedStatement.setString(1, id);
-            ResultSet rs = preparedStatement.executeQuery();
-            rs.next();
-            return extractAd(rs);
-
+            PreparedStatement stmt = connection.prepareStatement("select * from users where username = ?");
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return extractUser(rs);
+            } return null;
         }catch(SQLException e ){
             throw new RuntimeException("Error retrieving an ad.", e);
         }
+    }
 
+    private User extractUser(ResultSet rs) throws SQLException {
+        try {
+            return new User(
+                    rs.getLong("id"),
+                    rs.getString("username"),
+                    rs.getString("email"),
+                    rs.getString("password")
+            );
+        } catch (NullPointerException e){
+            return null;
+        }
     }
 
 
-    @Override
-    public Long insert(User user) {
-        return null;
+        @Override
+        public Long insert (User user){
+            try {
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO users(username, email, password) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                stmt.setString(1, user.getUsername());
+                stmt.setString(2, user.getEmail());
+                stmt.setString(3, user.getPassword());
+                stmt.executeUpdate();
+                ResultSet rs = stmt.getGeneratedKeys();
+                rs.next();
+                return rs.getLong(1);
+
+            } catch (SQLException e) {
+                throw new RuntimeException("Error creating a new user.", e);
+            }
+        }
+
+
+
     }
-}
