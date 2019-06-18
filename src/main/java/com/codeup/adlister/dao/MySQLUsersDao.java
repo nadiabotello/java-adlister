@@ -30,23 +30,20 @@ public class MySQLUsersDao implements Users{
             if (rs.next()) {
                 return extractUser(rs);
             } return null;
-        }catch(SQLException e ){
+        } catch(SQLException e ){
             throw new RuntimeException("Error retrieving an ad.", e);
         }
     }
 
     private User extractUser(ResultSet rs) throws SQLException {
-        try {
+
             return new User(
                     rs.getLong("id"),
                     rs.getString("username"),
                     rs.getString("email"),
                     rs.getString("password")
             );
-        } catch (NullPointerException e){
-            return null;
         }
-    }
 
 
         @Override

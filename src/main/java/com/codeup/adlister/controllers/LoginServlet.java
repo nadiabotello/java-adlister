@@ -28,6 +28,7 @@ public class LoginServlet extends HttpServlet {
 
         if (dbUser == null){
             response.sendRedirect("/login?error=username_doesnt_exit");
+            return;
         }
 
         boolean validAttempt = dbUser.getPassword().equals(password);
